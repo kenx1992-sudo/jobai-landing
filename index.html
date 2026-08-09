@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JobAI — 搵工唔使再手抄職位資料</title>
+<meta name="description" content="一鍵將 LinkedIn、JobsDB、CTgoodjobs 嘅職位存入你嘅 JobAI 帳戶,仲可以用你自己嘅 JobAI 檔案自動填申請表。">
+<meta name="theme-color" content="#4F46E5">
+<meta property="og:type" content="website">
+<meta property="og:title" content="JobAI — 搵工唔使再手抄職位資料">
+<meta property="og:description" content="一鍵將 LinkedIn、JobsDB、CTgoodjobs 嘅職位存入你嘅 JobAI 帳戶,仲可以自動填申請表。">
+<meta property="og:url" content="https://kenx1992-sudo.github.io/jobai-landing/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    --ink:#F6F5FB; --surface:#FFFFFF; --surface-2:#F0EFF8; --line:#E3E1F0;
+    --text:#17162A; --text-muted:#6B6885;
+    --brand:#4F46E5; --brand-strong:#4338CA; --green:#0EA472;
+    --stage:#100F1C; --stage-2:#1F1E36; --stage-line:#2C2A4A; --stage-text:#F4F3FA; --stage-muted:#9A97B8;
+    --serif:"Noto Serif TC","Noto Serif HK","PMingLiU","Songti TC",Georgia,serif;
+    --sans:-apple-system,"PingFang HK","Microsoft JhengHei","Segoe UI",sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#0E0D18; --surface:#17162A; --surface-2:#1D1C32; --line:#2C2A44;
+      --text:#F1F0F8; --text-muted:#9A97B8;
+      --brand:#8F88FF; --brand-strong:#A79FFF; --green:#34D399;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#0E0D18; --surface:#17162A; --surface-2:#1D1C32; --line:#2C2A44;
+    --text:#F1F0F8; --text-muted:#9A97B8;
+    --brand:#8F88FF; --brand-strong:#A79FFF; --green:#34D399;
+  }
+  :root[data-theme="light"]{
+    --ink:#F6F5FB; --surface:#FFFFFF; --surface-2:#F0EFF8; --line:#E3E1F0;
+    --text:#17162A; --text-muted:#6B6885; --brand:#4F46E5; --brand-strong:#4338CA; --green:#0EA472;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  img,svg{max-width:100%;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radius:4px;}
+  .page{background:var(--ink); color:var(--text); font-family:var(--sans); min-height:100vh;}
+  .col{max-width:1080px; margin:0 auto; padding:0 24px;}
+  ::selection{background:var(--brand); color:#fff;}
+
+  /* nav */
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:26px 0; gap:16px;}
+  .wordmark{font-family:var(--serif); font-weight:700; font-size:21px; letter-spacing:-.01em;}
+  .nav-right{display:flex; align-items:center; gap:22px;}
+  .nav-link{font-size:13.5px; color:var(--text-muted); text-decoration:none;}
+  .nav-link:hover{color:var(--text);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; border-radius:10px; border:0;
+    font-family:var(--sans); font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap;
+  }
+  .btn-primary{background:var(--brand); color:#fff; padding:11px 20px; font-size:14px;}
+  .btn-primary:hover{background:var(--brand-strong);}
+  .btn-sm{padding:9px 16px; font-size:13px;}
+
+  /* hero */
+  .hero{padding:36px 0 8px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--brand); margin:0 0 16px; font-weight:600;
+  }
+  h1.hero-title{
+    font-family:var(--serif); font-weight:700; font-size:clamp(32px,5vw,50px); line-height:1.28;
+    margin:0 0 20px; text-wrap:balance; max-width:16ch;
+  }
+  .hero-sub{
+    font-size:16px; line-height:1.75; color:var(--text-muted); max-width:52ch; margin:0 0 28px;
+  }
+  .hero-cta{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:8px;}
+  .hero-status{font-size:12.5px; color:var(--text-muted); margin:0;}
+  .hero-status b{color:var(--text); font-weight:600;}
+  .hero-sites{
+    font-family:var(--mono); font-size:11.5px; color:var(--text-muted); letter-spacing:.03em;
+    margin:22px 0 0;
+  }
+  .hero-sites b{color:var(--text); font-weight:600;}
+
+  /* mascot stage */
+  .stage{
+    background:var(--stage); border-radius:24px; margin:44px 0 8px; padding:0;
+    overflow:hidden; position:relative; border:1px solid rgba(255,255,255,.08);
+  }
+  .stage-inner{max-width:640px; margin:0 auto; padding:8px 24px 0;}
+  .stage-inner svg{display:block; width:100%; height:auto;}
+  .stage-caption{
+    text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.04em;
+    color:var(--stage-muted); padding:0 24px 26px; margin:0;
+  }
+  .stage-caption b{color:var(--stage-text); font-weight:600;}
+
+  /* sections */
+  section{padding:76px 0;}
+  .section-head{max-width:46ch; margin:0 0 44px;}
+  h2.section-title{
+    font-family:var(--serif); font-weight:700; font-size:clamp(24px,3vw,32px); margin:0 0 12px; text-wrap:balance;
+  }
+  .section-sub{font-size:15px; line-height:1.7; color:var(--text-muted); margin:0;}
+
+  /* features */
+  .features{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:18px; overflow:hidden;}
+  .feature{background:var(--surface); padding:36px 32px;}
+  .feature-num{font-family:var(--mono); font-size:12px; letter-spacing:.1em; color:var(--brand); font-weight:700; margin:0 0 18px;}
+  .feature h3{font-size:19px; font-weight:700; margin:0 0 12px;}
+  .feature p{font-size:14.5px; line-height:1.75; color:var(--text-muted); margin:0;}
+  @media (max-width:760px){ .features{grid-template-columns:1fr;} }
+
+  /* privacy */
+  .privacy-wrap{
+    background:var(--stage); border-radius:24px; padding:48px; display:grid;
+    grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .privacy-head p.eyebrow{color:var(--stage-muted);}
+  .privacy-head h2{font-family:var(--serif); color:var(--stage-text); font-weight:700; font-size:clamp(22px,3vw,28px); margin:0 0 12px; text-wrap:balance;}
+  .privacy-head p.lead{color:var(--stage-muted); font-size:14.5px; line-height:1.75; margin:0;}
+  .privacy-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px;}
+  .privacy-list li{display:flex; align-items:flex-start; gap:12px; font-size:14.5px; line-height:1.6; color:var(--stage-text);}
+  .check{
+    flex:none; width:20px; height:20px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .check svg{width:11px; height:11px;}
+  @media (max-width:760px){ .privacy-wrap{grid-template-columns:1fr; padding:32px 24px; gap:32px;} }
+
+  /* sites */
+  .sites-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .site-chip{
+    border:1px solid var(--line); border-radius:999px; padding:9px 18px; font-size:13.5px;
+    font-weight:600; color:var(--text-muted); background:var(--surface);
+  }
+
+  /* footer */
+  footer{border-top:1px solid var(--line); padding:40px 0 56px;}
+  .foot-row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;}
+  .foot-brand .wordmark{margin-bottom:8px;}
+  .foot-brand p{font-size:13px; color:var(--text-muted); margin:0; max-width:34ch; line-height:1.6;}
+  .foot-links{display:flex; gap:32px; flex-wrap:wrap;}
+  .foot-col{display:flex; flex-direction:column; gap:10px;}
+  .foot-col span{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:2px;}
+  .foot-col a{font-size:13.5px; text-decoration:none; color:var(--text);}
+  .foot-col a:hover{color:var(--brand);}
+  .fine-print{margin-top:32px; padding-top:24px; border-top:1px solid var(--line); font-size:12px; color:var(--text-muted);}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="col">
+    <nav class="nav">
+      <div class="wordmark">JobAI</div>
+      <div class="nav-right">
+        <a class="nav-link" href="https://kenx1992-sudo.github.io/jobai-extension-privacy/" target="_blank" rel="noopener">私隱政策</a>
+        <a class="btn btn-primary btn-sm" href="https://job-ai-leap.base44.app" target="_blank" rel="noopener">開免費帳戶</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Chrome Extension · 免費</p>
+      <h1 class="hero-title">搵工,唔使再手抄職位資料。</h1>
+      <p class="hero-sub">
+        你本身已經喺度睇緊個職位。撳一下,職位名、公司、地點、薪酬、描述、連結,就直接入咗你自己嘅
+        JobAI 帳戶,可以即刻追蹤、比較、同你嘅履歷做 Match。
+      </p>
+      <div class="hero-cta" id="cta">
+        <a class="btn btn-primary" href="https://job-ai-leap.base44.app" target="_blank" rel="noopener">開免費 JobAI 帳戶</a>
+        <p class="hero-status">Chrome Web Store <b>準備上架中</b> · 需要免費 JobAI 帳戶</p>
+      </div>
+      <p class="hero-sites">支援 <b>LinkedIn</b> · <b>JobsDB</b> · <b>CTgoodjobs</b></p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-inner">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 340" fill="none" role="img" aria-label="一隻貓幫你將職位資料存入 JobAI">
+          <rect x="300" y="90" width="148" height="160" rx="14" fill="#1F1E36"/>
+          <rect x="316" y="110" width="44" height="14" rx="7" fill="#10B981"/>
+          <rect x="316" y="140" width="116" height="10" rx="5" fill="#2C2A4A"/>
+          <rect x="316" y="158" width="84" height="10" rx="5" fill="#2C2A4A"/>
+          <rect x="316" y="208" width="116" height="24" rx="8" fill="#4F46E5"/>
+          <circle cx="322" cy="100" r="16" fill="#10B981"/>
+          <polyline points="313,100 319,107 332,92" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="205.0" cy="195.0" r="15.0" fill="#E3A76F"/>
+          <circle cx="211.2" cy="192.6" r="14.8" fill="#E3A76F"/>
+          <circle cx="217.4" cy="190.2" r="14.6" fill="#E3A76F"/>
+          <circle cx="223.5" cy="188.0" r="14.4" fill="#E3A76F"/>
+          <circle cx="229.6" cy="185.8" r="14.2" fill="#E3A76F"/>
+          <circle cx="235.6" cy="183.8" r="14.1" fill="#E3A76F"/>
+          <circle cx="241.5" cy="181.8" r="13.9" fill="#E3A76F"/>
+          <circle cx="247.4" cy="180.0" r="13.7" fill="#E3A76F"/>
+          <circle cx="253.2" cy="178.2" r="13.5" fill="#E3A76F"/>
+          <circle cx="259.0" cy="176.6" r="13.3" fill="#E3A76F"/>
+          <circle cx="264.8" cy="175.1" r="13.1" fill="#E3A76F"/>
+          <circle cx="270.4" cy="173.6" r="12.9" fill="#E3A76F"/>
+          <circle cx="276.1" cy="172.3" r="12.8" fill="#E3A76F"/>
+          <circle cx="281.6" cy="171.1" r="12.6" fill="#E3A76F"/>
+          <circle cx="287.1" cy="170.0" r="12.4" fill="#E3A76F"/>
+          <circle cx="292.6" cy="168.9" r="12.2" fill="#E3A76F"/>
+          <circle cx="298.0" cy="168.0" r="12.0" fill="#E3A76F"/>
+          <ellipse cx="155" cy="228" rx="67" ry="60" fill="#E3A76F"/>
+          <ellipse cx="155" cy="245" rx="27" ry="35" fill="#F2C495"/>
+          <ellipse cx="118" cy="273" rx="18" ry="15" fill="#E3A76F"/>
+          <ellipse cx="194" cy="273" rx="18" ry="15" fill="#E3A76F"/>
+          <ellipse cx="301" cy="168" rx="15" ry="14" fill="#E3A76F"/>
+          <circle cx="150" cy="118" r="56" fill="#E3A76F"/>
+          <polygon points="96,92 114,24 150,88" fill="#E3A76F"/>
+          <polygon points="150,88 186,24 204,92" fill="#E3A76F"/>
+          <polygon points="106,84 117,44 139,82" fill="#F0A9A3"/>
+          <polygon points="161,82 183,44 194,84" fill="#F0A9A3"/>
+          <ellipse cx="97.5" cy="167.5" rx="7.5" ry="12.5" fill="#C6884E"/>
+          <ellipse cx="203.5" cy="167.5" rx="7.5" ry="12.5" fill="#C6884E"/>
+          <ellipse cx="133" cy="121" rx="7" ry="7" fill="#100F1C"/>
+          <ellipse cx="167" cy="121" rx="7" ry="7" fill="#100F1C"/>
+          <polygon points="144,132 156,132 150,141" fill="#F0A9A3"/>
+          <path d="M138,142 Q150,154 162,142" fill="none" stroke="#100F1C" stroke-width="3" stroke-linecap="round"/>
+          <line x1="92" y1="132" x2="48" y2="128" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="208" y1="132" x2="252" y2="128" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="92" y1="140" x2="48" y2="141" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="208" y1="140" x2="252" y2="141" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="92" y1="148" x2="48" y2="155" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="208" y1="148" x2="252" y2="155" stroke="#C6884E" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="stage-caption">手抄嘅嘢,<b>JobAI 幫你做晒</b>。</p>
+    </div>
+
+    <section id="features">
+      <div class="section-head">
+        <p class="eyebrow">What it does</p>
+        <h2 class="section-title">兩件事,做晒晒。</h2>
+        <p class="section-sub">冇多餘功能,冇你唔識嘅設定——淨係將搵工入面最煩嘅兩步自動化。</p>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <p class="feature-num">01 · SAVE</p>
+          <h3>一鍵儲存眼前嗰個職位</h3>
+          <p>
+            喺 LinkedIn、JobsDB、CTgoodjobs 嘅職位詳情頁,會浮出一個「Save to JobAI」掣。撳落去,
+            extension 會幫你抽好職位名、公司、地點、薪酬範圍、描述同網址。你睇一眼、想改就改,然後儲存。
+            已經存過嘅職位會自動認出,唔會重複。
+          </p>
+        </div>
+        <div class="feature">
+          <p class="feature-num">02 · AUTOFILL</p>
+          <h3>自動填申請表</h3>
+          <p>
+            打開一張申請表,喺 extension 彈窗撳「自動填申請表」,你自己嘅 JobAI 檔案(姓名、電郵、電話、
+            城市、現職職位、現職公司、技能)就會填入對應嘅空白欄位。已經有內容嘅欄位唔會被覆蓋,
+            extension 亦永遠唔會幫你㩒交表——一定係你自己睇完再交。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <div class="privacy-wrap">
+        <div class="privacy-head">
+          <p class="eyebrow">Privacy</p>
+          <h2>用你自己嘅登入身分,冇第三方。</h2>
+          <p class="lead">Extension 唔會問你攞密碼,亦冇 API key。職位只會寫入你自己嘅 JobAI 帳戶。</p>
+        </div>
+        <ul class="privacy-list">
+          <li><span class="check"><svg viewBox="0 0 12 12" aria-hidden="true"><polyline points="2,6.5 5,9.5 10,3" fill="none" stroke="#0E0D18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>只喺你撳「儲存」嗰一刻先讀當前職位頁</li>
+          <li><span class="check"><svg viewBox="0 0 12 12" aria-hidden="true"><polyline points="2,6.5 5,9.5 10,3" fill="none" stroke="#0E0D18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>唔追蹤瀏覽紀錄、唔收集分析數據</li>
+          <li><span class="check"><svg viewBox="0 0 12 12" aria-hidden="true"><polyline points="2,6.5 5,9.5 10,3" fill="none" stroke="#0E0D18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>唔會出售或轉交任何資料畀第三方</li>
+          <li><span class="check"><svg viewBox="0 0 12 12" aria-hidden="true"><polyline points="2,6.5 5,9.5 10,3" fill="none" stroke="#0E0D18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>登入 token 只留喺你部機,移除 extension 即清走</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="sites">
+      <div class="section-head" style="margin-bottom:24px;">
+        <p class="eyebrow">Supported sites</p>
+      </div>
+      <div class="sites-row">
+        <span class="site-chip">LinkedIn</span>
+        <span class="site-chip">JobsDB</span>
+        <span class="site-chip">CTgoodjobs</span>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot-row">
+        <div class="foot-brand">
+          <div class="wordmark">JobAI</div>
+          <p>搵工唔使再手抄職位資料。一個免費 Chrome extension,連接你自己嘅 JobAI 帳戶。</p>
+        </div>
+        <div class="foot-links">
+          <div class="foot-col">
+            <span>Product</span>
+            <a href="https://job-ai-leap.base44.app" target="_blank" rel="noopener">job-ai-leap.base44.app</a>
+            <a href="#features">功能</a>
+          </div>
+          <div class="foot-col">
+            <span>Legal</span>
+            <a href="https://kenx1992-sudo.github.io/jobai-extension-privacy/" target="_blank" rel="noopener">私隱政策</a>
+          </div>
+        </div>
+      </div>
+      <p class="fine-print">需要免費 JobAI 帳戶 · 唔會出售任何資料畀第三方 · Free · No ads</p>
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>
