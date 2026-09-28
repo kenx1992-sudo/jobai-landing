@@ -28,7 +28,7 @@ python render_cat.py     # → cat_preview.png
 
 - Extension source(private):`kenx1992-sudo/jobai-extension`
 - 私隱政策(public):`kenx1992-sudo/jobai-extension-privacy` → https://kenx1992-sudo.github.io/jobai-extension-privacy/
-- JobAI web app:https://job-ai-leap.base44.app
+- JobAI web app:https://jobai.hk/
 
 ## 註
 
